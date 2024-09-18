@@ -2,7 +2,13 @@
 
 1. Clone the repository
 2. Create env from the env.example file
-3. Execute the following commands:
+3. Initialize and update the submodules
+
+```bash
+git submodule update --init --recursive
+```
+
+4. Execute the following commands:
 
 ```bash
 docker compose up --build
