@@ -1,9 +1,28 @@
 services:
+  # =============================================================================
+  # NATS Server
+  # =============================================================================\
   nats-server:
     image: nats:latest
     ports:
       - "8222:8222"
 
+  # =============================================================================
+  # Auth Microservice
+  # =============================================================================\
+  auth-microservice:
+    build: ./auth-microservice
+    command: npm run start:dev
+    volumes:
+      - ./auth-microservice/src:/usr/src/app/src
+    environment:
+      - PORT=3000
+      - NATS_SERVERS=nats://nats-server:4222
+      # - JWT_SECRET=${JWT_SECRET}
+
+  # =============================================================================
+  # Client Gateway
+  # =============================================================================\
   client-gateway:
     build: ./client-gateway
     command: npm run start:dev
@@ -15,6 +34,9 @@ services:
       - PORT=3000
       - NATS_SERVERS=nats://nats-server:4222
 
+  # =============================================================================
+  # Products Microservice
+  # =============================================================================\
   products-microservice:
     build: ./products-microservice
     command: npm run start:dev
@@ -25,6 +47,9 @@ services:
       - NATS_SERVERS=nats://nats-server:4222
       - DATABASE_URL=file:./dev.db
 
+  # =============================================================================
+  # Orders Microservice
+  # =============================================================================\
   orders-microservice:
     depends_on:
       orders-db:
@@ -54,6 +79,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
   # =============================================================================
   # Payments Microservice
   # =============================================================================\
