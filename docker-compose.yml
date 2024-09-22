@@ -19,7 +19,7 @@ services:
       - PORT=3000
       - NATS_SERVERS=nats://nats-server:4222
       - DATABASE_URL=${AUTH_MICROSERVICE_DATABASE_URL}
-      # - JWT_SECRET=${JWT_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
 
   # =============================================================================
   # Client Gateway
