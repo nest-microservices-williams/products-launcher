@@ -12,6 +12,8 @@ services:
     build:
       context: ./auth-microservice
       dockerfile: Dockerfile.prod
+      args:
+        - AUTH_MICROSERVICE_DATABASE_URL=${AUTH_MICROSERVICE_DATABASE_URL}
     image: auth-microservice-prod
     environment:
       - PORT=3000
@@ -48,35 +50,16 @@ services:
   # =============================================================================
   # Orders Microservice
   # =============================================================================\
-  # orders-microservice:
-  #   depends_on:
-  #     orders-db:
-  #       condition: service_healthy
-  #   build: ./orders-microservice
-  #   command: npm run start:dev
-  #   volumes:
-  #     - ./orders-microservice/src:/usr/src/app/src
-  #   environment:
-  #     - PORT=3002
-  #     - NATS_SERVERS=nats://nats-server:4222
-  #     - DATABASE_URL=postgres://postgres:postgres@orders-db:5432/orders
-
-  # orders-db:
-  #   container_name: orders-database
-  #   image: postgres:16.2
-  #   volumes:
-  #     - ./orders-microservice/postgres:/var/lib/postgresql/data
-  #   ports:
-  #     - 5432:5432
-  #   environment:
-  #     - POSTGRES_USER=postgres
-  #     - POSTGRES_PASSWORD=postgres
-  #     - POSTGRES_DB=orders
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "pg_isready -U postgres"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
+  orders-microservice:
+    build:
+      context: ./orders-microservice
+      dockerfile: Dockerfile.prod
+      args:
+        - ORDERS_MICROSERVICE_DATABASE_URL=${ORDERS_MICROSERVICE_DATABASE_URL}
+    environment:
+      - PORT=3002
+      - NATS_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=${ORDERS_MICROSERVICE_DATABASE_URL}
 
   # =============================================================================
   # Payments Microservice
